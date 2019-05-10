@@ -7,7 +7,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 
 @SpringBootApplication
 @MapperScan("com.example.demo.service.mapper")
-@ServletComponentScan(value = "com.example.demo.web.config.filter")
+//@ServletComponentScan(value = "com.example.demo.web.config.filter")
 public class DemoApplication {
 
     public static void main(String[] args) {

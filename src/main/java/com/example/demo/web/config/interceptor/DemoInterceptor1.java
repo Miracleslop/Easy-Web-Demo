@@ -2,6 +2,7 @@ package com.example.demo.web.config.interceptor;
 
 import com.example.demo.api.ISectionService;
 import com.example.demo.service.entity.Section;
+import com.example.demo.web.config.InterceptorParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -11,7 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-@Component(value = "DemoInterceptor1")
+@Component
+@InterceptorParam(patterns = "/**")
 public class DemoInterceptor1 implements HandlerInterceptor {
 
     @Autowired
