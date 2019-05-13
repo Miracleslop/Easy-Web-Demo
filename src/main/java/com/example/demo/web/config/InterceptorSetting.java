@@ -21,6 +21,6 @@ public class InterceptorSetting extends BaseSetting {
 
     @Override
     protected List<Class<? extends Filter>> getFilters() {
-        return Lists.newArrayList(DemoFilter1.class);
+        return Lists.newArrayList(DemoFilter1.class, DemoFilter2.class);
     }
 }

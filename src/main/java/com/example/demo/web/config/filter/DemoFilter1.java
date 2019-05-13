@@ -1,13 +1,13 @@
 package com.example.demo.web.config.filter;
 
 
+import com.example.demo.web.config.UrlPatterns;
+
 import javax.servlet.*;
 import java.io.IOException;
 
-//@WebFilter(filterName = "DemoFilter1", urlPatterns = "/*", initParams = {
-//        @WebInitParam(name = "id", value = "1", description = "id")
-//})
 
+@UrlPatterns(value = "/**")
 public class DemoFilter1 implements Filter {
 
     @Override
@@ -18,7 +18,7 @@ public class DemoFilter1 implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        System.out.println("hello filter 1");
+        System.out.println("doFilter filter 1");
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

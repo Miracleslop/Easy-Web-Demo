@@ -1,9 +1,12 @@
 package com.example.demo.web.config.filter;
 
 
+import com.example.demo.web.config.UrlPatterns;
+
 import javax.servlet.*;
 import java.io.IOException;
 
+@UrlPatterns(value = "/**")
 public class DemoFilter2 implements Filter {
 
     @Override

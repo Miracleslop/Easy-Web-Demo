@@ -2,7 +2,6 @@ package com.example.demo.web.config;
 
 
 import com.example.demo.web.config.filter.DemoFilter;
-import com.example.demo.web.config.filter.DemoFilter1;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -20,22 +19,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         ApplicationContext ac = SpringContext.getApplicationContext();
         BaseSetting setting = (BaseSetting) ac.getBean("interceptorSetting");
-        List<BaseSetting.InterceptorWrapper> wrappers = setting.getHandlerInterceptors();
-        for (BaseSetting.InterceptorWrapper wrapper : wrappers) {
+        List<InterceptorWrapper> wrappers = setting.getHandlerInterceptors();
+        for (InterceptorWrapper wrapper : wrappers) {
             registry.addInterceptor(wrapper.getInterceptor())
                     .addPathPatterns(wrapper.getPattens());
         }
 
     }
 
-
     @Bean
     public FilterRegistrationBean filterBean() {
-//        ApplicationContext ac = SpringContext.getApplicationContext();
-//        BaseSetting setting = (BaseSetting) ac.getBean("interceptorSetting");
-//        List<BaseSetting.FilterWrapper> handlerFilters = setting.getHandlerFilters();
-
-//        DemoFilter demoFilter = new DemoFilter();
         FilterRegistrationBean bean = new FilterRegistrationBean<>(new DemoFilter());
         bean.addUrlPatterns("/*");
         bean.setName("DemoFilter");

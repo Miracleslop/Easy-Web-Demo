@@ -1,46 +1,74 @@
 package com.example.demo.web.config.filter;
 
+
 import com.example.demo.web.config.BaseSetting;
-import org.apache.catalina.core.ApplicationFilterChain;
+import com.example.demo.web.config.FilterWrapper;
+import com.example.demo.web.config.SpringContext;
+import org.springframework.context.ApplicationContext;
 
 import javax.servlet.*;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.catalina.core.ApplicationFilterConfig;
+public class DemoFilter implements Filter, FilterChain {
 
-public class DemoFilter implements Filter {
+    private final List<FilterWrapper> eFilterChain = new ArrayList<>();
 
-    private List<BaseSetting.FilterWrapper> filterWrapperList;
+    private ThreadLocal<Integer> pos;
+
+    private int n;
+
+    private boolean isFirst = true;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        ServletContext servletContext = servletRequest.getServletContext();
-
-        Class<ApplicationFilterChain> chainClass = ApplicationFilterChain.class;
-        try {
-            Field filters = chainClass.getDeclaredField("filters");
-            filters.setAccessible(true);
-            Object o = filters.get(filterChain);
-            Method addFilter = chainClass.getDeclaredMethod("addFilter", ApplicationFilterConfig.class);
-            addFilter.setAccessible(true);
-
-
-            System.out.println("");
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (isFirst) {
+            synchronized (this) {
+                if (isFirst) {
+                    pos = ThreadLocal.withInitial(() -> 0);
+                    //  初始化所有的过滤器
+                    ApplicationContext ac = SpringContext.getApplicationContext();
+                    BaseSetting setting = (BaseSetting) ac.getBean("interceptorSetting");
+                    List<FilterWrapper> handlerFilters = setting.getHandlerFilters();
+                    eFilterChain.addAll(handlerFilters);
+                    n = eFilterChain.size();
+                    isFirst = false;
+                }
+            }
         }
+
+        this.doFilter(servletRequest, servletResponse);
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
     }
 
     @Override
     public void destroy() {
+        for (FilterWrapper filter : eFilterChain) {
+            filter.destroy();
+        }
+    }
 
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse) throws IOException, ServletException {
+        Integer i = pos.get();
+        if (i < n) {
+            FilterWrapper filter = eFilterChain.get(i);
+            pos.set(++i);
+            while (!filter.matchFiltersURL(servletRequest) && i < n) {
+                filter = eFilterChain.get(i);
+                pos.set(++i);
+            }
+
+            if (i <= n) {
+                filter.doFilter(servletRequest, servletResponse, this);
+            }
+        } else {
+            pos.set(0);
+        }
     }
 }
