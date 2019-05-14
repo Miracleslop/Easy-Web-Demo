@@ -39,8 +39,9 @@ public class DemoController extends BaseController {
 
     @RequestMapping(value = "/", method = {RequestMethod.GET})
     public String hello() {
-        List<Section> list = sectionService.list();
-        return list.get(0).toString();
+//        List<Section> list = sectionService.list();
+        Integer integer = sectionService.queryCount();
+        return integer.toString();
     }
 
 

@@ -1,7 +1,9 @@
 package com.example.demo.service.mapper;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.demo.service.entity.Section;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * <p>
@@ -12,5 +14,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2019-04-30
  */
 public interface SectionMapper extends BaseMapper<Section> {
+
+    @Select("SELECT COUNT(1) FROM s_section")
+    Integer queryCount();
 
 }

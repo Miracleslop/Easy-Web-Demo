@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
 import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
+import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
@@ -43,55 +44,63 @@ public class AutoGeneratorMain {
         // 代码生成器
         AutoGenerator mpg = new AutoGenerator();
 
-        // 全局配置
-        GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
-        gc.setOutputDir(projectPath + "/src/main/java");
-        gc.setAuthor("slop");
-        gc.setOpen(false);
-        // 是否覆盖同名文件，默认是false
-        gc.setFileOverride(true);
-        // ActiveRecord特性: new User().set("name", "James").set("age", 25).save();
-        gc.setActiveRecord(true);
-//        gc.setSwagger2(true); // 实体属性 Swagger2 注解
-//        gc.setEnableCache(false);// XML 二级缓存
-//        gc.setBaseResultMap(true);// XML ResultMap
-//        gc.setBaseColumnList(false);// XML columList
-        /* 自定义文件命名，注意 %s 会自动填充表实体属性！ */
-        // gc.setMapperName("%sDao");
-        // gc.setXmlName("%sDao");
-        // gc.setServiceName("MP%sService");
-        // gc.setServiceImplName("%sServiceDiy");
-        // gc.setControllerName("%sAction");
-        mpg.setGlobalConfig(gc);
+        // 全局配置
+        mpg.setGlobalConfig(new GlobalConfig()
+                .setOutputDir(projectPath + "/crm-service-impl/src/main/java")
+                .setAuthor("auto")
 
-        // 数据源配置
-        DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setDbType(DbType.MYSQL);
-        dsc.setTypeConvert(new MySqlTypeConvert() {
-            @Override
-            public IColumnType processTypeConvert(GlobalConfig globalConfig, String fieldType) {
-                return super.processTypeConvert(globalConfig, fieldType);
-            }
-        });
-        dsc.setUrl("jdbc:mysql://192.168.60.88/happy_growth_dev?zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2b8&characterEncoding=utf8&autoReconnect=true&useSSL=false");
-        // dsc.setSchemaName("public");
-        dsc.setDriverName("com.mysql.jdbc.Driver");
-        dsc.setUsername("hagrowth");
-        dsc.setPassword("1q2w3e4R.");
-        mpg.setDataSource(dsc);
+                //  注意日期 不然会报错
+                .setDateType(DateType.ONLY_DATE)
+                .setOpen(false)
 
-        // 包配置
-        PackageConfig pc = new PackageConfig();
-//        pc.setModuleName(scanner("模块名"));
-//        pc.setModuleName("s");
-        pc.setParent("com.example.demo");
-        pc.setEntity("service.entity");
-        pc.setMapper("service.mapper");
-        pc.setService("api");
-        pc.setServiceImpl("service.impl");
-        pc.setController("web.controller");
-        mpg.setPackageInfo(pc);
+                // 是否覆盖同名文件，默认是false
+                .setFileOverride(true)
+
+                // ActiveRecord特性: new User().set("name", "James").set("age", 25).save();
+                .setActiveRecord(false)
+
+                // 实体属性 Swagger2 注解
+                .setSwagger2(true)
+                // XML 二级缓存
+                .setEnableCache(false)
+                // XML ResultMap
+                .setBaseResultMap(true)
+                // XML columList
+                .setBaseColumnList(false)
+
+                // 自定义文件命名，注意 %s 会自动填充表实体属性
+                .setMapperName("%sDao")
+                .setXmlName("%sDao")
+                .setServiceName("MP%sService")
+                .setServiceImplName("%sServiceDiy")
+                .setControllerName("%sAction")
+        );
+
+        mpg.setDataSource(new DataSourceConfig()
+                .setSchemaName("public")
+                .setDbType(DbType.MYSQL)
+                .setUrl("jdbc:mysql://203.110.166.228:3307/crm_sprint_3.0.0?zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2b8&characterEncoding=utf-8&useSSL=false")
+                .setDriverName("com.mysql.jdbc.Driver")
+                .setUsername("crm_dev")
+                .setPassword("111111")
+                .setTypeConvert(new MySqlTypeConvert() {
+                    @Override
+                    public IColumnType processTypeConvert(GlobalConfig globalConfig, String fieldType) {
+                        return super.processTypeConvert(globalConfig, fieldType);
+                    }
+                })
+        );
+
+        mpg.setPackageInfo(new PackageConfig()
+//                .setModuleName("s")
+                        .setParent("com.dipont.crm.service")
+                        .setEntity("entity")
+                        .setMapper("mapper")
+                        .setService("face")
+                        .setServiceImpl("face.impl")
+        );
+
 
 //        // 自定义配置
 //        InjectionConfig cfg = new InjectionConfig() {
@@ -136,40 +145,40 @@ public class AutoGeneratorMain {
         TemplateConfig tc = new TemplateConfig()
                 .setEntity("templates/entity.java")
                 .setController("templates/controller.java")
-                .setServiceImpl("templates/serviceImpl.java");
-
-
-        tc.setXml(null);
+                .setServiceImpl("templates/serviceImpl.java")
+                .setXml(null);
         mpg.setTemplate(tc);
 
         // 策略配置
-        StrategyConfig strategy = new StrategyConfig();
-//        strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
-        // strategy.setCapitalMode(true);// 全局大写命名 ORACLE 注意
-        strategy.setInclude("s_section");
+        mpg.setStrategy(new StrategyConfig()
+//        strategy.setInclude(scanner("表名，多个英文逗号分割").split(","))
+                        // strategy.setCapitalMode(true)// 全局大写命名 ORACLE 注意
+                        .setInclude("s_section")
 
 
-        strategy.setNaming(NamingStrategy.underline_to_camel);
-        strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-//        strategy.setEntityLombokModel(true);
+                        .setNaming(NamingStrategy.underline_to_camel)
+                        .setColumnNaming(NamingStrategy.underline_to_camel)
+//        strategy.setEntityLombokModel(true)
 
-        strategy.setRestControllerStyle(true);
-//        strategy.setSuperEntityClass("com.example.demo.service.entity.BaseEntity");
-        strategy.setSuperControllerClass("com.example.demo.web.controller.BaseController");
+                        .setRestControllerStyle(true)
+//        strategy.setSuperEntityClass("com.example.demo.service.entity.BaseEntity")
+                        .setSuperControllerClass("com.example.demo.web.controller.BaseController")
 
-        strategy.setEntityTableFieldAnnotationEnable(true);
-        strategy.setLogicDeleteFieldName("delete_flag");
-        strategy.setEntityBooleanColumnRemoveIsPrefix(true);
+                        .setEntityTableFieldAnnotationEnable(true)
+                        .setLogicDeleteFieldName("delete_flag")
+                        .setEntityBooleanColumnRemoveIsPrefix(true)
 
-        strategy.setSuperEntityColumns("id");
-        strategy.setControllerMappingHyphenStyle(true);
-        strategy.setTablePrefix("s_", "g_");  // 此处可以修改为您的表前缀
+                        .setSuperEntityColumns("id")
+                        .setControllerMappingHyphenStyle(true)
+                        .setTablePrefix("s_", "g_")  // 此处可以修改为您的表前缀
 
-        // 【实体】是否生成字段常量（默认 false）
-        strategy.setEntityColumnConstant(true);
-        // 【实体】是否为构建者模型（默认 false）
-        strategy.setEntityBuilderModel(true);
-        mpg.setStrategy(strategy);
+                        // 【实体】是否生成字段常量（默认 false）
+                        .setEntityColumnConstant(true)
+                        // 【实体】是否为构建者模型（默认 false）
+                        .setEntityBuilderModel(true)
+        );
+
+
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
         mpg.execute();
     }

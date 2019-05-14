@@ -22,5 +22,9 @@ public class SectionServiceImpl extends ServiceImpl<SectionMapper, Section> impl
     private SectionMapper sectionMapper;
 
 
+    @Override
+    public Integer queryCount(){
+        return sectionMapper.queryCount();
+    }
 
 }

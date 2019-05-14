@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author slop
  * @since 2019-04-30
  */
-public interface ISectionService extends IService<Section> {
+public interface ISectionService {
 
+    Integer queryCount();
 }
