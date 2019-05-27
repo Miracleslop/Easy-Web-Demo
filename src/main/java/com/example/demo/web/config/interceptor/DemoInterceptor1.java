@@ -21,7 +21,7 @@ public class DemoInterceptor1 implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        List<Section> list = sectionService.list();
+        Integer integer = sectionService.queryCount();
         System.out.println("interceptor 1");
         return true;
     }

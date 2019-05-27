@@ -44,8 +44,12 @@ public abstract class BaseSetting {
         return ret;
     }
 
-    protected abstract List<Class<? extends HandlerInterceptor>> getInterceptors();
+    protected List<Class<? extends HandlerInterceptor>> getInterceptors() {
+        return new ArrayList<>();
+    }
 
-    protected abstract List<Class<? extends Filter>> getFilters();
+    protected List<Class<? extends Filter>> getFilters() {
+        return new ArrayList<>();
+    }
 
 }

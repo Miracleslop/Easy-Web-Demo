@@ -49,25 +49,14 @@ public class AutoGeneratorMain {
         mpg.setGlobalConfig(new GlobalConfig()
                 .setOutputDir(projectPath + "/crm-service-impl/src/main/java")
                 .setAuthor("auto")
-
-                //  注意日期 不然会报错
-                .setDateType(DateType.ONLY_DATE)
-                .setOpen(false)
-
-                // 是否覆盖同名文件，默认是false
-                .setFileOverride(true)
-
-                // ActiveRecord特性: new User().set("name", "James").set("age", 25).save();
-                .setActiveRecord(false)
-
-                // 实体属性 Swagger2 注解
-                .setSwagger2(true)
-                // XML 二级缓存
-                .setEnableCache(false)
-                // XML ResultMap
-                .setBaseResultMap(true)
-                // XML columList
-                .setBaseColumnList(false)
+                .setDateType(DateType.ONLY_DATE)    //  注意日期 不然会报错
+                .setOpen(false)                     //  生成后打开文件夹
+                .setFileOverride(true)              //  是否覆盖同名文件，默认是false
+                .setActiveRecord(false)             //  ActiveRecord特性: new User().set("name", "James").set("age", 25).save();
+                .setSwagger2(true)                  //  实体属性 Swagger2 注解
+                .setEnableCache(false)              //  XML 二级缓存
+                .setBaseResultMap(true)             //  XML ResultMap
+                .setBaseColumnList(false)           //  XML columList
 
                 // 自定义文件命名，注意 %s 会自动填充表实体属性
                 .setMapperName("%sDao")
@@ -151,24 +140,24 @@ public class AutoGeneratorMain {
 
         // 策略配置
         mpg.setStrategy(new StrategyConfig()
-//        strategy.setInclude(scanner("表名，多个英文逗号分割").split(","))
-                        // strategy.setCapitalMode(true)// 全局大写命名 ORACLE 注意
-                        .setInclude("s_section")
+                        .setCapitalMode(false)      //  全局大写命名 ORACLE 注意
+                        .setInclude("s_section")    //  需要生成的表
+//                .setExclude("s_section")          //  排除的表
 
 
-                        .setNaming(NamingStrategy.underline_to_camel)
+                        .setNaming(NamingStrategy.underline_to_camel)   //  表名生成策略
                         .setColumnNaming(NamingStrategy.underline_to_camel)
-//        strategy.setEntityLombokModel(true)
+                        .setEntityLombokModel(false)
 
                         .setRestControllerStyle(true)
-//        strategy.setSuperEntityClass("com.example.demo.service.entity.BaseEntity")
-                        .setSuperControllerClass("com.example.demo.web.controller.BaseController")
+//                .setSuperEntityClass("com.example.demo.service.entity.BaseEntity")
+//                .setSuperControllerClass("com.example.demo.web.controller.BaseController")
 
                         .setEntityTableFieldAnnotationEnable(true)
                         .setLogicDeleteFieldName("delete_flag")
                         .setEntityBooleanColumnRemoveIsPrefix(true)
 
-                        .setSuperEntityColumns("id")
+//                        .setSuperEntityColumns("id")
                         .setControllerMappingHyphenStyle(true)
                         .setTablePrefix("s_", "g_")  // 此处可以修改为您的表前缀
 

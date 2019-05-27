@@ -29,7 +29,7 @@ public class DemoFilter implements Filter, FilterChain {
                     pos = ThreadLocal.withInitial(() -> 0);
                     //  初始化所有的过滤器
                     ApplicationContext ac = SpringContext.getApplicationContext();
-                    BaseSetting setting = (BaseSetting) ac.getBean("interceptorSetting");
+                    BaseSetting setting = ac.getBean(BaseSetting.class);
                     List<FilterWrapper> handlerFilters = setting.getHandlerFilters();
                     eFilterChain.addAll(handlerFilters);
                     n = eFilterChain.size();
@@ -37,9 +37,12 @@ public class DemoFilter implements Filter, FilterChain {
                 }
             }
         }
-
+        pos.set(0);
         this.doFilter(servletRequest, servletResponse);
-        filterChain.doFilter(servletRequest, servletResponse);
+        Integer i = pos.get();
+        if(i >= n) {
+            filterChain.doFilter(servletRequest, servletResponse);
+        }
     }
 
     @Override
@@ -67,8 +70,6 @@ public class DemoFilter implements Filter, FilterChain {
             if (i <= n) {
                 filter.doFilter(servletRequest, servletResponse, this);
             }
-        } else {
-            pos.set(0);
         }
     }
 }

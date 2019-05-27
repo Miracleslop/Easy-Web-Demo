@@ -18,7 +18,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         ApplicationContext ac = SpringContext.getApplicationContext();
-        BaseSetting setting = (BaseSetting) ac.getBean("interceptorSetting");
+        BaseSetting setting = ac.getBean(BaseSetting.class);
         List<InterceptorWrapper> wrappers = setting.getHandlerInterceptors();
         for (InterceptorWrapper wrapper : wrappers) {
             registry.addInterceptor(wrapper.getInterceptor())

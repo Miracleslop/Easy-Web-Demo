@@ -11,7 +11,7 @@ import javax.servlet.Filter;
 import java.util.List;
 
 
-@Component(value = "interceptorSetting")
+@Component
 public class InterceptorSetting extends BaseSetting {
 
     @Override
